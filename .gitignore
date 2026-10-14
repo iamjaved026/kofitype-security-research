@@ -1,0 +1,24 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# Old unorganized folders (kept locally, not pushed)
+last-work/
+new-source-code/
+maker-tool/
+export-file-example/
+extension/
+
+# Temp
+*.tmp
+*.bak

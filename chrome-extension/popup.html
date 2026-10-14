@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KofiType Toolkit</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c0a0e;
+      --surface: #14121a;
+      --surface2: #1e1b26;
+      --border: rgba(255,255,255,0.07);
+      --accent: #d9a066;
+      --accent-dim: rgba(217,160,102,0.15);
+      --accent-glow: rgba(217,160,102,0.3);
+      --green: #66ffb3;
+      --green-dim: rgba(102,255,179,0.12);
+      --red: #ff6b6b;
+      --red-dim: rgba(255,107,107,0.12);
+      --text: #f0ecf8;
+      --text-sub: #8b8497;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --trans: 0.18s ease;
+    }
+    html { font-size: 13px; }
+    body {
+      width: 420px;
+      min-height: 560px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: linear-gradient(135deg, #1a0f22 0%, #12101a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon {
+      width: 32px; height: 32px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-glow);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--accent);
+    }
+    .brand-name { font-size: 1.05rem; font-weight: 700; color: var(--accent); }
+    .brand-sub { font-size: 0.78rem; color: var(--text-sub); }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #444; transition: background var(--trans), box-shadow var(--trans);
+    }
+    .status-dot.active { background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+    /* TAB BAR */
+    .tab-bar {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .tab-btn {
+      flex: 1; padding: 10px 6px;
+      background: none; border: none;
+      color: var(--text-sub);
+      font-family: inherit; font-size: 0.8rem;
+      cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      border-bottom: 2px solid transparent;
+      transition: color var(--trans), border-color var(--trans), background var(--trans);
+    }
+    .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-btn i { font-size: 0.95rem; }
+
+    /* PANELS */
+    .panel { display: none; padding: 16px; flex-direction: column; gap: 12px; }
+    .panel.active { display: flex; }
+
+    /* CARDS */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 0.82rem; font-weight: 600; color: var(--text-sub);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .card-title i { color: var(--accent); }
+
+    /* FORM */
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label { font-size: 0.72rem; color: var(--text-sub); font-weight: 500; }
+    .field input, .field select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      padding: 6px 9px;
+      width: 100%; outline: none;
+      transition: border-color var(--trans);
+    }
+    .field input:focus, .field select:focus { border-color: var(--accent); }
+    .field.full { grid-column: 1 / -1; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 9px 16px;
+      border: none; border-radius: var(--radius-sm);
+      font-family: inherit; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: all var(--trans);
+    }
+    .btn-primary { background: var(--accent); color: #0c0a0e; }
+    .btn-primary:hover { background: #f0b87a; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-danger { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,107,107,0.25); }
+    .btn-danger:hover { background: rgba(255,107,107,0.22); }
+    .btn-full { width: 100%; }
+
+    /* TOGGLE */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 0.82rem; color: var(--text); }
+    .toggle-sub { font-size: 0.72rem; color: var(--text-sub); margin-top: 2px; }
+    .switch { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch .slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 999px; transition: background var(--trans);
+    }
+    .switch .slider::before {
+      content: ''; position: absolute;
+      height: 14px; width: 14px; left: 3px; top: 3px;
+      background: var(--text-sub); border-radius: 50%;
+      transition: transform var(--trans), background var(--trans);
+    }
+    .switch input:checked + .slider { background: var(--accent-dim); border-color: var(--accent); }
+    .switch input:checked + .slider::before { transform: translateX(18px); background: var(--accent); }
+
+    /* HOOK BADGE */
+    .hook-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .hook-badge.off { background: var(--surface2); color: var(--text-sub); }
+    .hook-badge.on { background: var(--green-dim); color: var(--green); border: 1px solid rgba(102,255,179,0.3); }
+
+    /* LOG */
+    .log-list {
+      max-height: 200px; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 5px;
+      scrollbar-width: thin; scrollbar-color: var(--surface2) transparent;
+    }
+    .log-entry {
+      display: flex; align-items: flex-start; gap: 7px;
+      padding: 7px 9px; background: var(--surface2);
+      border-radius: var(--radius-sm); font-size: 0.72rem;
+      animation: fadeIn 0.2s ease;
+    }
+    .log-entry .log-icon { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+    .log-entry .log-ts { color: var(--text-sub); font-size: 0.68rem; }
+    .log-entry .log-kind { font-weight: 600; color: var(--text); }
+    .log-empty { color: var(--text-sub); font-size: 0.78rem; text-align: center; padding: 20px 0; }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 14px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--surface2); border: 1px solid var(--accent-glow);
+      border-radius: var(--radius-sm); padding: 8px 16px;
+      font-size: 0.78rem; color: var(--accent);
+      opacity: 0; transition: all 0.25s ease;
+      pointer-events: none; white-space: nowrap; z-index: 9999;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* STATS */
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat-box {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px 8px; text-align: center;
+    }
+    .stat-val { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    .stat-label { font-size: 0.68rem; color: var(--text-sub); margin-top: 3px; }
+
+    /* PROGRESS */
+    .progress-wrap { height: 4px; background: var(--surface2); border-radius: 999px; overflow: hidden; }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #f0b87a);
+      width: 0%; transition: width 0.4s ease; border-radius: 999px;
+    }
+    .spin-wrap { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-sub); }
+    .spin-wrap i { color: var(--accent); }
+
+    /* FOOTER */
+    .footer {
+      border-top: 1px solid var(--border); padding: 8px 18px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--surface);
+    }
+    .footer-credit { font-size: 0.72rem; color: var(--text-sub); }
+    .footer-credit a { color: var(--accent); text-decoration: none; }
+    .footer-ver { font-size: 0.7rem; color: var(--text-sub); opacity: 0.4; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-mug-hot"></i></div>
+      <div>
+        <div class="brand-name">KofiType Toolkit</div>
+        <div class="brand-sub">Advanced Mode — by Javed</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="site-label" style="font-size:0.7rem;color:var(--text-sub);"></span>
+      <div class="status-dot" id="status-dot"></div>
+    </div>
+  </div>
+
+  <!-- TAB BAR — no onclick, wired in popup.js -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="forge">
+      <i class="fa-solid fa-bolt"></i> Forge
+    </button>
+    <button class="tab-btn" data-tab="hook">
+      <i class="fa-solid fa-fish-fins"></i> Hook
+    </button>
+    <button class="tab-btn" data-tab="reader">
+      <i class="fa-solid fa-chart-bar"></i> Stats
+    </button>
+    <button class="tab-btn" data-tab="log">
+      <i class="fa-solid fa-terminal"></i> Log
+    </button>
+    <button class="tab-btn" data-tab="about">
+      <i class="fa-solid fa-circle-info"></i> About
+    </button>
+  </div>
+
+  <!-- ═══ FORGE PANEL ═══ -->
+  <div class="panel active" id="panel-forge">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fa-solid fa-user-pen"></i> Identity</div>
+        <span style="font-size:0.7rem;color:var(--text-sub);">AES-256-GCM</span>
+      </div>
+      <div class="field-grid">
+        <div class="field full">
+          <label>Username</label>
+          <input id="f-username" type="text" value="Player" maxlength="20" placeholder="Max 20 chars" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fa-solid fa-chart-simple"></i> Stats</div>
+      </div>
+      <div class="field-grid">
+        <div class="field">
+          <label>XP (0–999)</label>
+          <input id="f-xp" type="number" value="999" min="0" max="999" />
+        </div>
+        <div class="field">
+          <label>Level (1–9999)</label>
+          <input id="f-level" type="number" value="50" min="1" max="9999" />
+        </div>
+        <div class="field">
+          <label>Best WPM (0–300)</label>
+          <input id="f-wpm" type="number" value="200" min="0" max="300" />
+        </div>
+        <div class="field">
+          <label>Accuracy (%)</label>
+          <input id="f-acc" type="number" value="98" min="0" max="100" />
+        </div>
+        <div class="field">
+          <label>Tests Done</label>
+          <input id="f-tests" type="number" value="200" min="0" />
+        </div>
+        <div class="field">
+          <label>Time Typed (s)</label>
+          <input id="f-time" type="number" value="99999" min="0" />
+        </div>
+        <div class="field full">
+          <label>Mode</label>
+          <select id="f-mode">
+            <option value="time 15">Time 15s</option>
+            <option value="time 30" selected>Time 30s</option>
+            <option value="time 60">Time 60s</option>
+            <option value="words 10">Words 10</option>
+            <option value="words 25">Words 25</option>
+            <option value="words 50">Words 50</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label>Security Token <span id="token-status" style="color:var(--text-sub);font-weight:400;">(paste from site)</span></label>
+          <input id="f-token" type="number" value="4004198119" />
+        </div>
+      </div>
+    </div>
+
+    <div id="forge-progress" style="display:none;">
+      <div class="spin-wrap">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <span id="forge-phase">Initializing…</span>
+      </div>
+      <div class="progress-wrap" style="margin-top:8px;">
+        <div class="progress-bar" id="forge-bar"></div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-full" id="btn-forge">
+      <i class="fa-solid fa-bolt"></i> Forge &amp; Download .kofi
+    </button>
+  </div>
+
+  <!-- ═══ HOOK PANEL ═══ -->
+  <div class="panel" id="panel-hook">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fa-solid fa-fish-fins"></i> Hook Mode</div>
+        <div class="hook-badge off" id="hook-badge">
+          <i class="fa-solid fa-circle"></i> OFF
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Intercept Discord Requests</div>
+          <div class="toggle-sub">Auto-approve imports without real Discord</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="hook-toggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fa-solid fa-circle-info"></i> How It Works</div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--text-sub);line-height:1.6;display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:8px;"><span style="color:var(--accent);font-weight:700;min-width:18px;">1.</span><span>Enable Hook Mode above.</span></div>
+        <div style="display:flex;gap:8px;"><span style="color:var(--accent);font-weight:700;min-width:18px;">2.</span><span>Go to kofitype.vercel.app → Settings → Import a <code>.kofi</code> file.</span></div>
+        <div style="display:flex;gap:8px;"><span style="color:var(--accent);font-weight:700;min-width:18px;">3.</span><span>Extension intercepts the webhook POST and fakes a <b style="color:var(--green);">👍 approval</b> in ~3s.</span></div>
+        <div style="display:flex;gap:8px;"><span style="color:var(--accent);font-weight:700;min-width:18px;">4.</span><span>Import completes — no Discord needed.</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;"><i class="fa-solid fa-shield-halved"></i> Auto-bypass Checks</div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Login Alert Webhook</div>
+          <div class="toggle-sub">checkBypassAlert()</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="bypass-login" checked /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Stats Check Webhook</div>
+          <div class="toggle-sub">checkStatsLegitimacy()</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="bypass-stats" checked /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Profile Check Webhook</div>
+          <div class="toggle-sub">checkProfileLegitimacy()</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="bypass-profile" checked /><span class="slider"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STATS PANEL ═══ -->
+  <div class="panel" id="panel-reader">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fa-solid fa-chart-bar"></i> Page Stats</div>
+        <button class="btn btn-secondary" id="btn-refresh-stats" style="padding:5px 10px;font-size:0.72rem;">
+          <i class="fa-solid fa-rotate"></i> Refresh
+        </button>
+      </div>
+      <div id="stat-grid-wrap">
+        <div class="log-empty">Not on kofitype.vercel.app</div>
+      </div>
+    </div>
+    <div class="card" id="history-card" style="display:none;">
+      <div class="card-title" style="margin-bottom:10px;"><i class="fa-solid fa-clock-rotate-left"></i> Recent History</div>
+      <div id="history-list" style="font-size:0.75rem;display:flex;flex-direction:column;gap:5px;"></div>
+    </div>
+  </div>
+
+  <!-- ═══ LOG PANEL ═══ -->
+  <div class="panel" id="panel-log">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="fa-solid fa-terminal"></i> Activity Log</div>
+        <button class="btn btn-danger" id="btn-clear-log" style="padding:5px 10px;font-size:0.72rem;">
+          <i class="fa-solid fa-trash"></i> Clear
+        </button>
+      </div>
+      <div class="log-list" id="log-list">
+        <div class="log-empty">No activity yet.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ABOUT PANEL ═══ -->
+  <div class="panel" id="panel-about">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+        <div style="width:48px;height:48px;background:var(--accent-dim);border:1px solid var(--accent-glow);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;">☕</div>
+        <div>
+          <div style="font-size:1rem;font-weight:700;color:var(--accent);">KofiType Toolkit</div>
+          <div style="font-size:0.75rem;color:var(--text-sub);">v2.0.0 — Advanced Mode</div>
+        </div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--text-sub);line-height:1.7;">
+        Security research &amp; vulnerability testing tool for kofitype.vercel.app.<br/>
+        Personal tool — I own both applications.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;"><i class="fa-solid fa-list-check"></i> Features</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:0.8rem;">
+        <div style="display:flex;gap:8px;align-items:center;"><i class="fa-solid fa-check" style="color:var(--green);"></i><span>AES-256-GCM .kofi payload forge</span></div>
+        <div style="display:flex;gap:8px;align-items:center;"><i class="fa-solid fa-check" style="color:var(--green);"></i><span>Zero-width steganography encoding</span></div>
+        <div style="display:flex;gap:8px;align-items:center;"><i class="fa-solid fa-check" style="color:var(--green);"></i><span>Discord webhook hook mode</span></div>
+        <div style="display:flex;gap:8px;align-items:center;"><i class="fa-solid fa-check" style="color:var(--green);"></i><span>Auto-bypass all webhook checks</span></div>
+        <div style="display:flex;gap:8px;align-items:center;"><i class="fa-solid fa-check" style="color:var(--green);"></i><span>Live stats reader</span></div>
+        <div style="display:flex;gap:8px;align-items:center;"><i class="fa-solid fa-check" style="color:var(--green);"></i><span>Activity log</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px;"><i class="fa-solid fa-user"></i> Credits</div>
+      <div style="font-size:0.8rem;color:var(--text-sub);line-height:1.7;">
+        Made by <a href="https://iamjaved.site" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:600;">Javed</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/iamjaved026" target="_blank" style="color:var(--accent);text-decoration:none;">@iamjaved026</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-credit">❤️ by <a href="https://iamjaved.site" target="_blank">Javed</a></div>
+    <div class="footer-ver">v2.0.0</div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <!-- popup.js is the ONLY script — no inline JS anywhere -->
+  <script src="popup.js"></script>
+</body>
+</html>

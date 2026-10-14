@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KofiType Encrypted Forger v5.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root {
+      --accent: #d9a066;
+      --accent-glow: #ffc485;
+      --bg-deep: #0a0a0f;
+      --bg-card: rgba(255,255,255,0.04);
+      --bg-card-hover: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.08);
+      --border-accent: rgba(217,160,102,0.3);
+      --text: #ffffff;
+      --text-sub: #a0a0a0;
+      --success: #66ffb3;
+      --danger: #ff6b6b;
+    }
+
+    body{
+      font-family:'Outfit',sans-serif;
+      background: var(--bg-deep);
+      color: var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:30px;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(ellipse 60% 50% at 10% 20%, rgba(111,78,55,0.35), transparent),
+        radial-gradient(ellipse 50% 40% at 90% 80%, rgba(217,160,102,0.25), transparent),
+        radial-gradient(ellipse 40% 30% at 50% 50%, rgba(102,255,179,0.05), transparent);
+      pointer-events:none;
+      z-index: 0;
+    }
+
+    .container{
+      width:100%;
+      max-width:920px;
+      background: rgba(18, 18, 26, 0.85);
+      border:1px solid var(--border);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius:28px;
+      padding:40px;
+      box-shadow:
+        0 25px 60px rgba(0,0,0,0.5),
+        0 0 0 1px rgba(255,255,255,0.03) inset;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    h1{
+      font-size:2.2rem;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+
+    h1 .version-tag {
+      font-size: 0.85rem;
+      color: var(--success);
+      background: rgba(102, 255, 179, 0.1);
+      border: 1px solid rgba(102, 255, 179, 0.2);
+      padding: 3px 10px;
+      border-radius: 999px;
+      vertical-align: middle;
+      margin-left: 8px;
+      font-weight: 500;
+    }
+
+    .subtitle{
+      color: var(--text-sub);
+      margin-bottom:30px;
+      line-height:1.7;
+      font-size: 0.95rem;
+    }
+
+    .subtitle code {
+      background: rgba(217,160,102,0.15);
+      color: var(--accent-glow);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:16px;
+    }
+
+    .card{
+      background: var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      transition: all 0.25s ease;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .card:focus-within {
+      border-color: var(--border-accent);
+      box-shadow: 0 0 0 2px rgba(217,160,102,0.1);
+    }
+
+    label{
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom:8px;
+      color: var(--accent);
+      font-weight:600;
+      font-size: 0.9rem;
+    }
+
+    label i {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    input, select{
+      width:100%;
+      padding:13px 14px;
+      border-radius:12px;
+      border: 1px solid transparent;
+      outline:none;
+      background: rgba(22, 22, 29, 0.9);
+      color: var(--text);
+      font-family:'Fira Code',monospace;
+      font-size:0.9rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(217,160,102,0.12);
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    select option {
+      background: #16161d;
+      color: white;
+    }
+
+    .actions{
+      margin-top:28px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    button{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      padding:16px 24px;
+      border-radius:14px;
+      font-size:1rem;
+      font-weight:600;
+      transition: all 0.25s ease;
+      font-family:'Outfit',sans-serif;
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .primary{
+      background: linear-gradient(135deg, #d9a066, #c4884a);
+      color:#111;
+      font-size: 1.05rem;
+      letter-spacing: 0.3px;
+    }
+
+    .secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 1.05rem;
+    }
+
+    .secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .primary:hover{
+      transform:translateY(-2px);
+      box-shadow: 0 8px 25px rgba(217,160,102,0.35);
+    }
+
+    .primary:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .footer{
+      margin-top:30px;
+      text-align:center;
+      color:#777;
+      line-height:1.8;
+      width: 100%;
+    }
+
+    .footer a{
+      color: var(--accent);
+      text-decoration:none;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: var(--accent-glow);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-top:12px;
+      background:rgba(217,160,102,0.1);
+      border:1px solid rgba(217,160,102,0.18);
+      padding:10px 18px;
+      border-radius:999px;
+      color:#ffd6a6;
+      font-size: 0.9rem;
+    }
+
+    /* Crypto-tech info strip */
+    .tech-strip {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .tech-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(102, 255, 179, 0.06);
+      border: 1px solid rgba(102, 255, 179, 0.15);
+      border-radius: 8px;
+      color: var(--success);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .tech-chip.warn {
+      background: rgba(255, 107, 107, 0.06);
+      border-color: rgba(255, 107, 107, 0.15);
+      color: var(--danger);
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(5, 5, 10, 0.92);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: linear-gradient(145deg, #1a1d24, #141720);
+      border: 1px solid var(--border-accent);
+      padding: 45px 40px;
+      border-radius: 24px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      box-shadow:
+        0 0 50px rgba(217, 160, 102, 0.08),
+        0 25px 50px rgba(0,0,0,0.5);
+    }
+
+    .modal-content.card-modal {
+      max-width: 700px;
+      padding: 30px;
+      background: rgba(18, 18, 26, 0.95);
+    }
+
+    .spinner {
+      width: 56px;
+      height: 56px;
+      border: 3px solid rgba(217, 160, 102, 0.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 22px auto;
+    }
+
+    .modal-content h2 {
+      color: white;
+      margin-bottom: 8px;
+      font-size: 1.3rem;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 22px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-glow));
+      transition: width 0.1s linear;
+      border-radius: 3px;
+    }
+
+    .hacking-text {
+      color: var(--accent);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      margin-top: 16px;
+      min-height: 22px;
+      opacity: 0.9;
+    }
+
+    .encryption-notice {
+      margin-top: 22px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: rgba(102, 255, 179, 0.04);
+      border: 1px dashed rgba(102, 255, 179, 0.2);
+      color: rgba(102, 255, 179, 0.85);
+      font-size: 0.85rem;
+      text-align: center;
+      display: none;
+      line-height: 1.6;
+      width: 100%;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Pulse animation for the button */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(217,160,102,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(217,160,102,0); }
+    }
+
+    .primary:not(:disabled) {
+      animation: pulse-glow 2.5s infinite;
+    }
+
+    .primary:hover:not(:disabled) {
+      animation: none;
+    }
+
+    /* Export Card CSS Matching V5 Source exactly */
+    .export-card-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
+        background: transparent;
+    }
+
+    .export-card {
+        width: 100%;
+        max-width: 600px;
+        background: linear-gradient(135deg, #3E2723, #1A1210);
+        color: #FFF8F0;
+        padding: 3rem 2rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        border: 2px solid #D9A066;
+        transition: all 0.3s ease;
+    }
+
+    .export-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(217, 160, 102, 0.1) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .export-username {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #D9A066;
+        margin-bottom: 5px;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .export-rank {
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 2rem;
+        font-weight: 600;
+    }
+
+    .export-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 2rem;
+    }
+
+    .export-stat {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    .export-stat-val {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #FFF8F0;
+        font-family: 'Fira Code', monospace;
+    }
+
+    .export-stat-label {
+        font-size: 0.8rem;
+        color: #A68A72;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .export-watermark {
+        font-size: 1rem;
+        color: rgba(217, 160, 102, 0.5);
+        font-weight: 600;
+        letter-spacing: 2px;
+        margin-top: 1rem;
+    }
+
+    .export-watermark i {
+        margin-right: 5px;
+    }
+
+    @media(max-width:700px){
+      .container{
+        padding:22px;
+        border-radius: 20px;
+      }
+      h1{
+        font-size:1.6rem;
+      }
+      .tech-strip {
+        gap: 8px;
+      }
+      .modal-content {
+        padding: 30px 25px;
+      }
+      .export-username { font-size: 2.2rem; }
+      .export-stat-val { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Modal -->
+  <div class="modal-overlay" id="loadingModal">
+    <div class="modal-content">
+      <div class="spinner"></div>
+      <h2>Forging V5 Payload...</h2>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="hacking-text" id="hackingText">Initializing AES-GCM Key...</div>
+    </div>
+  </div>
+
+  <!-- Card Modal -->
+  <div class="modal-overlay" id="cardModal">
+    <div class="modal-content card-modal">
+      <h2 style="margin-bottom: 20px; color: var(--accent);">Profile Card Preview</h2>
+      
+      <div class="export-card-wrapper">
+        <div id="export-card" class="export-card">
+          <div class="export-username" id="card-username">Guest</div>
+          <div class="export-rank" id="card-rank-text" style="color: #CD7F32;"><i id="card-rank-icon" class="fa-solid fa-medal"></i> <span id="card-rank">Bronze I</span></div>
+          <div class="export-grid">
+              <div class="export-stat">
+                  <div class="export-stat-val" id="card-wpm">0</div>
+                  <div class="export-stat-label">Best WPM</div>
+              </div>
+              <div class="export-stat">
+                  <div class="export-stat-val" id="card-acc">0%</div>
+                  <div class="export-stat-label">Avg Accuracy</div>
+              </div>
+              <div class="export-stat">
+                  <div class="export-stat-val" id="card-tests">0</div>
+                  <div class="export-stat-label">Tests Done</div>
+              </div>
+              <div class="export-stat">
+                  <div class="export-stat-val" id="card-time">0h 0m</div>
+                  <div class="export-stat-label">Time Typed</div>
+              </div>
+          </div>
+          <div class="export-watermark"><i class="fa-solid fa-mug-hot"></i> kofitype</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 15px; margin-top: 20px;">
+        <button class="secondary" onclick="closeCardModal()">Close</button>
+        <button class="primary" onclick="downloadProfileCard()"><i class="fa-solid fa-camera"></i> Save Card Image</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>☕ KofiType Export Forger <span class="version-tag">v5.0</span></h1>
+      </div>
+    </div>
+
+    <p class="subtitle">
+      Generate fully encrypted and zero-width encoded <code>.kofi</code> files that bypass Guardian v5 Secure on KofiType V5.
+      Files are sealed with AES-256-GCM and steganographic encoding — invisible to text editors.
+    </p>
+
+    <div class="tech-strip">
+      <span class="tech-chip"><i class="fa-solid fa-lock"></i> AES-256-GCM</span>
+      <span class="tech-chip"><i class="fa-solid fa-eye-slash"></i> Zero-Width Stego</span>
+      <span class="tech-chip"><i class="fa-solid fa-shield-halved"></i> Guardian v5</span>
+      <span class="tech-chip warn"><i class="fa-solid fa-fingerprint"></i> SHA-256 Token</span>
+    </div>
+
+    <!-- Security Token Field (V6: must match live site's runtime-derived token) -->
+    <div style="margin: 0 0 16px; background: rgba(217,160,102,0.07); border: 1px solid rgba(217,160,102,0.2); border-radius: 14px; padding: 14px 18px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <div>
+          <label style="color: var(--accent); font-weight: 600; font-size: 0.9rem;"><i class="fa-solid fa-key"></i> Security Token</label>
+          <div style="font-size: 0.75rem; color: var(--text-sub); margin-top: 3px;">Must match live site's runtime-computed token. Use the Chrome extension to auto-detect it.</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input id="securityToken" type="number" value="4004198119"
+            style="background:rgba(0,0,0,0.3); border:1px solid rgba(217,160,102,0.3); border-radius:8px; color:#fff; font-family:'Fira Code',monospace; font-size:0.85rem; padding:7px 12px; width:160px; outline:none;"
+          >
+          <button onclick="resetToken()" style="background:rgba(217,160,102,0.1); border:1px solid rgba(217,160,102,0.25); color:var(--accent); border-radius:8px; padding:7px 12px; cursor:pointer; font-family:inherit; font-size:0.8rem;">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <label><i class="fa-solid fa-user"></i> Username</label>
+        <input id="username" value="Javed" maxlength="20" placeholder="Max 20 chars">
+      </div>
+
+      <div class="card">
+        <label><i class="fa-solid fa-bolt"></i> XP</label>
+        <input id="xp" type="number" value="999" min="0" max="999" placeholder="0-999">
+      </div>
+
+      <div class="card">
+        <label><i class="fa-solid fa-layer-group"></i> Level</label>
+        <input id="level" type="number" value="50" min="1" max="9999" placeholder="1-9999">
+      </div>
+
+      <div class="card">
+        <label><i class="fa-solid fa-gauge-high"></i> Best WPM</label>
+        <input id="bestWpm" type="number" value="300" min="0" max="350" placeholder="0-350">
+      </div>
+
+      <div class="card">
+        <label><i class="fa-solid fa-check-double"></i> Tests Completed</label>
+        <input id="tests" type="number" value="500" min="0" placeholder="Total tests">
+      </div>
+
+      <div class="card">
+        <label><i class="fa-solid fa-clock"></i> Time Typed (sec)</label>
+        <input id="timeTyped" type="number" value="99999" min="0" placeholder="Total seconds">
+      </div>
+
+      <div class="card">
+        <label><i class="fa-solid fa-bullseye"></i> Accuracy (%)</label>
+        <input id="acc" type="number" value="99" min="0" max="100" placeholder="0-100">
+      </div>
+
+      <div class="card">
+        <label><i class="fa-solid fa-keyboard"></i> Mode</label>
+        <select id="mode">
+          <option value="time 15">Time 15s</option>
+          <option value="time 30" selected>Time 30s</option>
+          <option value="time 60">Time 60s</option>
+          <option value="words 10">Words 10</option>
+          <option value="words 25">Words 25</option>
+          <option value="words 50">Words 50</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="generateBtn" onclick="startGeneration()">
+        <i class="fa-solid fa-bolt"></i> &nbsp;Encrypt .kofi
+      </button>
+      <button class="secondary" id="cardBtn" onclick="openCardModal()">
+        <i class="fa-solid fa-camera"></i> &nbsp;Profile Card
+      </button>
+    </div>
+
+    <div class="encryption-notice" id="encryptionNotice">
+      <i class="fa-solid fa-shield-check" style="margin-right: 5px;"></i>
+      Payload forged with token <code id="notice-token" style="background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;font-family:'Fira Code',monospace;font-size:0.8rem;">4004198119</code>.
+      File encoded with AES-GCM + zero-width steganography — appears empty in Notepad.
+    </div>
+
+    <div class="footer">
+      <div class="badge">
+        ❤️ Made with love by <a href="https://iamjaved.site" target="_blank" style="margin-left: 4px; font-weight: bold;">Javed</a>
+      </div>
+
+      <p style="margin-top:14px;">
+        <i class="fab fa-github" style="margin-right: 5px;"></i> Star the project on GitHub: <a href="https://github.com/iamjaved026/kofitype-result-maker" target="_blank">kofitype-result-maker</a>
+      </p>
+      <p style="margin-top:5px; font-size: 0.9rem;">
+         <a href="https://github.com/iamjaved026" target="_blank">@iamjaved026</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const hackingPhases = [
+        "Deriving AES-GCM-256 master key...",
+        "Encrypting user payload...",
+        "Bypassing Guardian v5 Secure...",
+        "Injecting XOR checksums...",
+        "Applying zero-width steganography...",
+        "Encoding binary bit-stream...",
+        "Scrambling SHA-256 integrity hash...",
+        "Forging nonce + timestamp...",
+        "Negotiating with the coffee gods...",
+        "Obfuscating payload envelope...",
+        "Compiling invisible byte sequence...",
+        "Sealing encrypted container..."
+    ];
+
+    let latestGeneratedBlob = null;
+    let latestGeneratedUsername = 'Guest';
+
+    // ==========================================
+    //  V5 SECURITY LOGIC
+    //  Token: 4004198119
+    //  Hash:  eeab36e7b48315e99ee200cef9170ef142dc9a4b5d1888470b73eb5a32ce0a98
+    // ==========================================
+
+    async function _klyuch(securityToken) {
+        const tokenStr = securityToken.toString(16).padEnd(32, '0').substring(0, 32);
+        return await crypto.subtle.importKey('raw', new TextEncoder().encode(tokenStr), { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+    }
+
+    function _nev(u) {
+        let b = "";
+        for (let i = 0; i < u.length; i++) {
+            b += u[i].toString(2).padStart(8, '0');
+        }
+        return b.replace(/0/g, '\u200B').replace(/1/g, '\u200C');
+    }
+
+    async function signPayload(cleanUser, securityToken) {
+        cleanUser._n = Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+        cleanUser._c = (cleanUser.xp * cleanUser.level * cleanUser.testsCompleted) ^ securityToken;
+
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const key = await _klyuch(securityToken);
+        const encodedData = new TextEncoder().encode(JSON.stringify(cleanUser));
+        const encryptedData = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encodedData);
+
+        const ivBase64 = btoa(String.fromCharCode(...iv));
+        const dataBase64 = btoa(String.fromCharCode(...new Uint8Array(encryptedData)));
+
+        return { e: 1, i: ivBase64, d: dataBase64 };
+    }
+
+    // ==========================================
+
+    function clamp(val, min, max) {
+        return Math.max(min, Math.min(max, val || min));
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    async function startGeneration() {
+        const modal = document.getElementById('loadingModal');
+        const progress = document.getElementById('progressBar');
+        const text = document.getElementById('hackingText');
+        const generateBtn = document.getElementById('generateBtn');
+
+        generateBtn.disabled = true;
+        modal.classList.add('active');
+        progress.style.width = '0%';
+        document.getElementById('encryptionNotice').style.display = 'none';
+
+        const selectedPhases = shuffleArray([...hackingPhases]).slice(0, 5);
+        selectedPhases.push("Payload sealed. Initiating download...");
+
+        const totalTime = 4500;
+        const updateInterval = 50;
+        const phaseTime = totalTime / selectedPhases.length;
+
+        let elapsed = 0;
+        let currentPhaseIndex = 0;
+
+        const intervalId = setInterval(async () => {
+            elapsed += updateInterval;
+
+            const percent = Math.min((elapsed / totalTime) * 100, 100);
+            progress.style.width = percent + '%';
+
+            const expectedPhaseIndex = Math.min(Math.floor(elapsed / phaseTime), selectedPhases.length - 1);
+            if (expectedPhaseIndex !== currentPhaseIndex) {
+                currentPhaseIndex = expectedPhaseIndex;
+                text.textContent = selectedPhases[currentPhaseIndex];
+            }
+
+            if (elapsed >= totalTime) {
+                clearInterval(intervalId);
+                await executeGeneration();
+                modal.classList.remove('active');
+                generateBtn.disabled = false;
+
+                // Update token display in notice
+                const usedToken = parseInt(document.getElementById('securityToken').value);
+                const noticeToken = document.getElementById('notice-token');
+                if (noticeToken) noticeToken.textContent = usedToken;
+
+                document.getElementById('encryptionNotice').style.display = 'block';
+                downloadGeneratedFile();
+            }
+        }, updateInterval);
+    }
+
+    function resetToken() {
+        document.getElementById('securityToken').value = '4004198119';
+    }
+
+    async function executeGeneration(){
+      const username = document.getElementById('username').value || 'Guest';
+      let xp = clamp(parseInt(document.getElementById('xp').value),0,999);
+      let level = clamp(parseInt(document.getElementById('level').value),1,9999);
+      let bestWpm = clamp(parseInt(document.getElementById('bestWpm').value),0,350);
+      let testsCompleted = Math.max(0, parseInt(document.getElementById('tests').value) || 0);
+      let timeTyped = Math.max(0, parseInt(document.getElementById('timeTyped').value) || 0);
+      let acc = clamp(parseInt(document.getElementById('acc').value),0,100);
+      let mode = document.getElementById('mode').value || 'time 30';
+
+      const SECURITY_TOKEN = parseInt(document.getElementById('securityToken').value);
+
+      // --- Heuristic Bypass: Auto-correct values to pass Guardian verify() ---
+
+      // Rule: if tests > 0, timeTyped must be >= tests * 1
+      if (testsCompleted > 0 && timeTyped < testsCompleted * 1) {
+         timeTyped = testsCompleted * 1;
+         document.getElementById('timeTyped').value = timeTyped;
+      }
+
+      // Rule: totalXP must not exceed timeTyped * 45
+      const totalXP = ((level - 1) * 1000) + xp;
+      const maxPossibleXP = timeTyped * 45;
+      if (timeTyped > 0 && totalXP > maxPossibleXP) {
+         timeTyped = Math.ceil(totalXP / 45);
+         document.getElementById('timeTyped').value = timeTyped;
+      }
+
+      // Rule: if tests=0, time and XP must both be 0
+      if (testsCompleted === 0 && (timeTyped > 0 || totalXP > 0)) {
+         testsCompleted = 1;
+         document.getElementById('tests').value = testsCompleted;
+      }
+
+      // --- Generate realistic history array ---
+      // Rule: history.length === 20 if tests >= 20, else === testsCompleted
+      let historyLength = testsCompleted >= 20 ? 20 : testsCompleted;
+      let historyArr = [];
+      for (let i = 0; i < historyLength; i++) {
+        const dayOffset = historyLength - i;
+        const pastDate = new Date();
+        pastDate.setDate(pastDate.getDate() - dayOffset);
+        historyArr.push({
+          date: pastDate.toLocaleDateString(),
+          wpm: Math.max(0, bestWpm - Math.floor(Math.random() * 25)),
+          acc: clamp(acc - Math.floor(Math.random() * 5), 0, 100),
+          mode
+        });
+      }
+      // Pin the most recent entry to exact bestWpm
+      if (historyArr.length > 0) {
+        historyArr[0].wpm = bestWpm;
+        historyArr[0].date = new Date().toLocaleDateString();
+      }
+
+      const cleanUser = {
+        username: String(username).slice(0, 20),
+        xp,
+        level,
+        bestWpm,
+        testsCompleted,
+        timeTyped,
+        history: historyArr,
+        currentSeason: new Date().toISOString().slice(0, 7)
+      };
+
+      // V4: Sign and AES-GCM encrypt with the new token
+      const signedUserObj = await signPayload(cleanUser, SECURITY_TOKEN);
+
+      const finalExport = {
+        app: 'kofitype',
+        version: '2.0',
+        timestamp: new Date().toISOString(),
+        user: signedUserObj,
+        settings: {
+          darkMode: true,
+          sound: true,
+          focus: false,
+          smoothCaret: true,
+          font: "'Outfit', sans-serif"
+        },
+        config: {
+          mode: mode.split(' ')[0],
+          time: mode.startsWith('time') ? parseInt(mode.split(' ')[1]) : 30,
+          words: mode.startsWith('words') ? parseInt(mode.split(' ')[1]) : 25,
+          punctuation: false,
+          numbers: false
+        }
+      };
+
+      // Encode to zero-width steganographic binary
+      const enc = new TextEncoder().encode(JSON.stringify(finalExport));
+      const invisibleData = _nev(enc);
+
+      latestGeneratedBlob = new Blob([invisibleData], { type: 'application/octet-stream' });
+      latestGeneratedUsername = cleanUser.username;
+    }
+
+    function downloadGeneratedFile() {
+      if(!latestGeneratedBlob) return;
+      const url = URL.createObjectURL(latestGeneratedBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${latestGeneratedUsername.toLowerCase().replace(/[^a-z0-9]/g,'')}_kofitype.kofi`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // ==========================================
+    //  PROFILE CARD GENERATION LOGIC
+    // ==========================================
+    const RANKS = [
+        { name: "Bronze", color: "#CD7F32", icon: "fa-medal" }, 
+        { name: "Silver", color: "#C0C0C0", icon: "fa-award" }, 
+        { name: "Gold", color: "#FFD700", icon: "fa-trophy" }, 
+        { name: "Diamond", color: "#00FFFF", icon: "fa-gem" }, 
+        { name: "Heroic", color: "#FF00FF", icon: "fa-star" }, 
+        { name: "Master", color: "#FF4500", icon: "fa-crown" }, 
+        { name: "Grandmaster", color: "#8A2BE2", icon: "fa-dragon" }, 
+        { name: "Godlike", color: "#FF0000", icon: "fa-bolt" }
+    ];
+
+    function toRoman(num) { 
+        const roman = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 }; 
+        let str = ''; 
+        for (let i of Object.keys(roman)) { 
+            let q = Math.floor(num / roman[i]); 
+            num -= q * roman[i]; 
+            str += i.repeat(q); 
+        } 
+        return str; 
+    }
+
+    function getRankInfo(level) { 
+        const r = RANKS[Math.min(RANKS.length - 1, Math.floor((level - 1) / 4))]; 
+        return { ...r, full: `${r.name} ${toRoman(level % 4 || 4)}` }; 
+    }
+
+    function openCardModal() {
+        // Populate the card dynamically from form inputs
+        const username = document.getElementById('username').value || 'Guest';
+        const level = clamp(parseInt(document.getElementById('level').value), 1, 9999);
+        const bestWpm = document.getElementById('bestWpm').value || 0;
+        const acc = document.getElementById('acc').value || 0;
+        const tests = document.getElementById('tests').value || 0;
+        const timeTyped = document.getElementById('timeTyped').value || 0;
+
+        const rank = getRankInfo(level);
+
+        document.getElementById('card-username').innerText = username.slice(0, 20);
+        document.getElementById('card-rank').innerText = rank.full;
+        document.getElementById('card-rank-text').style.color = rank.color;
+        
+        const cri = document.getElementById('card-rank-icon');
+        if (cri) cri.className = 'fa-solid ' + rank.icon;
+
+        document.getElementById('card-wpm').innerText = bestWpm;
+        document.getElementById('card-acc').innerText = acc + '%';
+        document.getElementById('card-tests').innerText = tests;
+        document.getElementById('card-time').innerText = Math.floor(timeTyped / 3600) + 'h ' + Math.floor((timeTyped % 3600) / 60) + 'm';
+
+        document.getElementById('cardModal').classList.add('active');
+    }
+
+    function closeCardModal() {
+        document.getElementById('cardModal').classList.remove('active');
+    }
+
+    function downloadProfileCard() {
+        html2canvas(document.getElementById('export-card'), {
+            backgroundColor: null, // Keep transparency if needed
+            scale: 2, // High resolution
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'stats.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    }
+
+  </script>
+</body>
+</html>

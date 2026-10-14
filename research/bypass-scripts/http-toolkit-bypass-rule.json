@@ -1,0 +1,30 @@
+[
+  {
+    "id": "kofitype-discord-bypass-v6",
+    "title": "KofiType V6 Discord Webhook Bypass",
+    "description": "Mocks the KofiType Discord verify API to automatically return a positive approval without needing an admin.",
+    "matchers": [
+      {
+        "matchers": [
+          {
+            "url": "https://kofitype.vercel.app/api/verify*"
+          }
+        ],
+        "type": "wildcard"
+      }
+    ],
+    "steps": [
+      {
+        "type": "simple",
+        "data": {
+          "status": 200,
+          "headers": {
+            "content-type": "application/json",
+            "access-control-allow-origin": "*"
+          },
+          "body": "{\"id\":\"bypassed-1337\",\"reactions\":[{\"emoji\":{\"name\":\"👍\"}}]}"
+        }
+      }
+    ]
+  }
+]

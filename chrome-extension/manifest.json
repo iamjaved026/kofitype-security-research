@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "KofiType Advanced Toolkit",
+  "version": "2.0.0",
+  "description": "Advanced toolkit for kofitype.vercel.app — payload forge, hook mode, and stat control.",
+  "author": "Javed (@iamjaved026)",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "webRequest",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "*://kofitype.vercel.app/*",
+    "*://discord.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://kofitype.vercel.app/*"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "KofiType Toolkit"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["injected.js"],
+      "matches": ["*://kofitype.vercel.app/*"]
+    }
+  ]
+}

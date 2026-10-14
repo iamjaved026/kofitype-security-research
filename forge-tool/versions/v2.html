@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KofiType Forger v2.1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:'Outfit',sans-serif;
+      background:#0f0f13;
+      color:white;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:30px;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at top left,#6f4e3780,transparent 30%),
+        radial-gradient(circle at bottom right,#d9a06650,transparent 30%);
+      pointer-events:none;
+    }
+
+    .container{
+      width:100%;
+      max-width:900px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      backdrop-filter:blur(15px);
+      border-radius:30px;
+      padding:35px;
+      box-shadow:0 20px 50px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    h1{
+      font-size:2.2rem;
+      margin-bottom:10px;
+      color:#d9a066;
+    }
+
+    .subtitle{
+      color:#c7c7c7;
+      margin-bottom:30px;
+      line-height:1.6;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:18px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;
+      padding:18px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:8px;
+      color:#d9a066;
+      font-weight:600;
+    }
+
+    input, select{
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:none;
+      outline:none;
+      background:#16161d;
+      color:white;
+      font-family:'Fira Code',monospace;
+      font-size:0.95rem;
+    }
+
+    input:focus, select:focus {
+        border: 1px solid #d9a066;
+    }
+
+    .actions{
+      margin-top:30px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:15px;
+    }
+
+    button{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      padding:15px 22px;
+      border-radius:14px;
+      font-size:1rem;
+      font-weight:600;
+      transition:0.2s ease;
+      font-family:'Outfit',sans-serif;
+    }
+
+    .primary{
+      background:#d9a066;
+      color:#111;
+    }
+
+    .secondary{
+      background:#22252f;
+      color:white;
+    }
+
+    button:hover{
+      transform:translateY(-2px);
+    }
+    
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    textarea{
+      width:100%;
+      min-height:260px;
+      margin-top:25px;
+      border:none;
+      outline:none;
+      border-radius:20px;
+      padding:20px;
+      background:#121218;
+      color:#66ffb3;
+      font-family:'Fira Code',monospace;
+      resize:vertical;
+      line-height:1.5;
+    }
+
+    .footer{
+      margin-top:30px;
+      text-align:center;
+      color:#999;
+      line-height:1.8;
+    }
+
+    .footer a{
+      color:#d9a066;
+      text-decoration:none;
+      transition: color 0.2s;
+    }
+    
+    .footer a:hover {
+        color: #ffc485;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-top:12px;
+      background:rgba(217,160,102,0.12);
+      border:1px solid rgba(217,160,102,0.2);
+      padding:10px 16px;
+      border-radius:999px;
+      color:#ffd6a6;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .modal-content {
+        background: #1a1d24;
+        border: 1px solid rgba(217, 160, 102, 0.3);
+        padding: 40px;
+        border-radius: 24px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 0 40px rgba(217, 160, 102, 0.1);
+    }
+
+    .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(217, 160, 102, 0.2);
+        border-top-color: #d9a066;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px auto;
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        height: 8px;
+        background: #2a2d35;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: #d9a066;
+        transition: width 0.1s linear;
+    }
+
+    .hacking-text {
+        color: #d9a066;
+        font-family: 'Fira Code', monospace;
+        font-size: 1.1rem;
+        margin-top: 15px;
+        min-height: 24px;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    @media(max-width:700px){
+      .container{
+        padding:22px;
+      }
+      h1{
+        font-size:1.7rem;
+      }
+      .actions {
+          flex-direction: column;
+      }
+      .actions button {
+          width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Modal -->
+  <div class="modal-overlay" id="loadingModal">
+      <div class="modal-content">
+          <div class="spinner"></div>
+          <h2 style="color: white; margin-bottom: 10px;">Forging Payload...</h2>
+          <div class="progress-bar-container">
+              <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <div class="hacking-text" id="hackingText">Initializing...</div>
+      </div>
+  </div>
+
+  <div class="container">
+    <h1>☕ KofiType Signed Export Generator <span style="font-size:1rem; color:#66ffb3;">v2.1</span></h1>
+
+    <p class="subtitle">
+      Generate valid <code>.kofi</code> export files with custom stats and mathematically perfect signatures for KofiType V2.
+    </p>
+
+    <!-- Hidden Security Token Input -->
+    <input type="hidden" id="securityToken" value="2209760271">
+
+    <div class="grid">
+      <div class="card">
+        <label>Username</label>
+        <input id="username" value="Javed" maxlength="20">
+      </div>
+
+      <div class="card">
+        <label>XP</label>
+        <input id="xp" type="number" value="999">
+      </div>
+
+      <div class="card">
+        <label>Level</label>
+        <input id="level" type="number" value="50">
+      </div>
+
+      <div class="card">
+        <label>Best WPM</label>
+        <input id="bestWpm" type="number" value="300">
+      </div>
+
+      <div class="card">
+        <label>Tests Completed</label>
+        <input id="tests" type="number" value="500">
+      </div>
+
+      <div class="card">
+        <label>Time Typed (seconds)</label>
+        <input id="timeTyped" type="number" value="99999">
+      </div>
+
+      <div class="card">
+        <label>Accuracy (%)</label>
+        <input id="acc" type="number" value="99">
+      </div>
+
+      <div class="card">
+        <label>Mode</label>
+        <select id="mode">
+            <option value="time 15">Time 15s</option>
+            <option value="time 30" selected>Time 30s</option>
+            <option value="time 60">Time 60s</option>
+            <option value="words 10">Words 10</option>
+            <option value="words 25">Words 25</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="generateBtn" onclick="startGeneration()">⚡ Forge .kofi File</button>
+      <button class="secondary" id="downloadBtn" onclick="downloadGeneratedFile()" style="display: none;">⬇️ Download Generated File</button>
+      <button class="secondary" id="copyBtn" onclick="copyJson()" style="display: none;">📋 Copy JSON</button>
+    </div>
+
+    <textarea id="output" readonly placeholder="Your forged payload will appear here..."></textarea>
+
+    <div class="footer">
+      <div class="badge">
+        ❤️ Made with love by <a href="https://iamjaved.site" target="_blank" style="margin-left: 4px; font-weight: bold;">Javed</a>
+      </div>
+
+      <p style="margin-top:14px;">
+        <i class="fab fa-github" style="margin-right: 5px;"></i> Star the project on GitHub: <a href="https://github.com/iamjaved026/kofitype-result-maker" target="_blank">kofitype-result-maker</a>
+      </p>
+      <p style="margin-top:5px; font-size: 0.9rem;">
+         <a href="https://github.com/iamjaved026" target="_blank">@iamjaved026</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const _HMAC_SALT = "kofitype_guardian_v4_secure_v2_0";
+
+    const hackingPhases = [
+        "Consulting with the aliens...",
+        "Bypassing Guardian Bootloader...",
+        "Hacking NASA database...",
+        "Downloading more RAM...",
+        "Applying quantum physics to the signature...",
+        "XOR-ing the mainframe...",
+        "Injecting dark matter into the payload...",
+        "Bribing the server administrators...",
+        "Reticulating splines...",
+        "Extracting the secure salts...",
+        "Calculating mathematical perfection..."
+    ];
+
+    async function _newSha256(str, token) {
+      const tokenStr = token.toString(16);
+      const shift = (token % 254) + 1;
+      let scrambled = "";
+      for (let i = 0; i < str.length; i++) {
+          scrambled += String.fromCharCode(str.charCodeAt(i) ^ shift);
+      }
+      scrambled = str.length + "|" + scrambled;
+      const msgBuffer = new TextEncoder().encode(scrambled + _HMAC_SALT + tokenStr);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    let latestGeneratedBlob = null;
+    let latestGeneratedUsername = 'Guest';
+
+    function clamp(val, min, max) {
+        return Math.max(min, Math.min(max, val || min));
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    async function startGeneration() {
+        const modal = document.getElementById('loadingModal');
+        const progress = document.getElementById('progressBar');
+        const text = document.getElementById('hackingText');
+        const generateBtn = document.getElementById('generateBtn');
+        
+        generateBtn.disabled = true;
+        modal.classList.add('active');
+        progress.style.width = '0%';
+        document.getElementById('output').value = '';
+        document.getElementById('downloadBtn').style.display = 'none';
+        document.getElementById('copyBtn').style.display = 'none';
+
+        // Select 4 random phrases
+        const selectedPhases = shuffleArray([...hackingPhases]).slice(0, 4);
+        selectedPhases.push("Payload generated successfully.");
+
+        const totalTime = 4000; // 4 seconds total
+        const updateInterval = 50; // update progress every 50ms
+        const phaseTime = totalTime / selectedPhases.length;
+        
+        let elapsed = 0;
+        let currentPhaseIndex = 0;
+
+        const intervalId = setInterval(async () => {
+            elapsed += updateInterval;
+            
+            // Update progress bar
+            const percent = Math.min((elapsed / totalTime) * 100, 100);
+            progress.style.width = percent + '%';
+
+            // Update text based on elapsed time
+            const expectedPhaseIndex = Math.min(Math.floor(elapsed / phaseTime), selectedPhases.length - 1);
+            if (expectedPhaseIndex !== currentPhaseIndex) {
+                currentPhaseIndex = expectedPhaseIndex;
+                text.textContent = selectedPhases[currentPhaseIndex];
+            }
+
+            if (elapsed >= totalTime) {
+                clearInterval(intervalId);
+                await executeGeneration();
+                modal.classList.remove('active');
+                generateBtn.disabled = false;
+                
+                document.getElementById('downloadBtn').style.display = 'block';
+                document.getElementById('copyBtn').style.display = 'block';
+            }
+        }, updateInterval);
+    }
+
+    async function executeGeneration(){
+      const username = document.getElementById('username').value || 'Guest';
+      let xp = clamp(parseInt(document.getElementById('xp').value),0,999);
+      let level = clamp(parseInt(document.getElementById('level').value),1,9999);
+      let bestWpm = clamp(parseInt(document.getElementById('bestWpm').value),0,350);
+      let testsCompleted = Math.max(0, parseInt(document.getElementById('tests').value) || 0);
+      let timeTyped = Math.max(0, parseInt(document.getElementById('timeTyped').value) || 0);
+      let acc = clamp(parseInt(document.getElementById('acc').value),0,100);
+      let mode = document.getElementById('mode').value || 'time 30';
+      
+      const SECURITY_TOKEN = parseInt(document.getElementById('securityToken').value);
+
+      // --- Heuristics Bypass Adjustments ---
+      const totalXP = ((level - 1) * 1000) + xp;
+      if (testsCompleted > 0 && timeTyped < testsCompleted * 1) {
+         timeTyped = testsCompleted * 1; 
+         document.getElementById('timeTyped').value = timeTyped;
+      }
+      const maxPossibleXP = timeTyped * 45; 
+      if (timeTyped > 0 && totalXP > maxPossibleXP) {
+         timeTyped = Math.ceil(totalXP / 45);
+         document.getElementById('timeTyped').value = timeTyped;
+      }
+      if (testsCompleted === 0 && (timeTyped > 0 || totalXP > 0)) {
+         testsCompleted = 1;
+         document.getElementById('tests').value = testsCompleted;
+      }
+      // -------------------------------
+
+      const cleanUser = {
+        username: String(username).slice(0, 20),
+        xp,
+        level,
+        bestWpm,
+        testsCompleted,
+        timeTyped,
+        history:[
+          {
+            date:new Date().toLocaleDateString(),
+            wpm:bestWpm,
+            acc,
+            mode
+          }
+        ],
+        currentSeason:new Date().toISOString().slice(0,7)
+      };
+
+      // Add v2 specific validation fields
+      cleanUser._n = Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
+      cleanUser._c = (xp * level * testsCompleted) ^ SECURITY_TOKEN;
+      cleanUser.sig = await _newSha256(JSON.stringify(cleanUser), SECURITY_TOKEN);
+
+      const finalExport = {
+        app:'kofitype',
+        version:'2.0',
+        timestamp:new Date().toISOString(),
+        user:cleanUser,
+        settings:{
+          darkMode:true,
+          sound:true,
+          focus:false,
+          smoothCaret:true,
+          font:"'Outfit', sans-serif"
+        },
+        config:{
+          mode:mode.split(' ')[0],
+          time:mode.startsWith('time') ? parseInt(mode.split(' ')[1]) : 30,
+          words:mode.startsWith('words') ? parseInt(mode.split(' ')[1]) : 25,
+          punctuation:false,
+          numbers:false
+        }
+      };
+
+      const json = JSON.stringify(finalExport,null,2);
+      document.getElementById('output').value = json;
+      
+      latestGeneratedBlob = new Blob([json], { type: 'application/json' });
+      latestGeneratedUsername = cleanUser.username;
+    }
+
+    function downloadGeneratedFile() {
+      if(!latestGeneratedBlob) return;
+      const url = URL.createObjectURL(latestGeneratedBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${latestGeneratedUsername.toLowerCase().replace(/[^a-z0-9]/g,'')}_forged.kofi`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    
+    async function copyJson(){
+      const val = document.getElementById('output').value;
+      if(!val){
+        alert('Generate file first 😄');
+        return;
+      }
+      await navigator.clipboard.writeText(val);
+      
+      const copyBtn = document.getElementById('copyBtn');
+      const originalText = copyBtn.innerHTML;
+      copyBtn.innerHTML = '✅ Copied!';
+      setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

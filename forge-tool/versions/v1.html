@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KofiType Profile Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:'Outfit',sans-serif;
+      background:#0f0f13;
+      color:white;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:30px;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at top left,#6f4e3780,transparent 30%),
+        radial-gradient(circle at bottom right,#d9a06650,transparent 30%);
+      pointer-events:none;
+    }
+
+    .container{
+      width:100%;
+      max-width:900px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      backdrop-filter:blur(15px);
+      border-radius:30px;
+      padding:35px;
+      box-shadow:0 20px 50px rgba(0,0,0,0.4);
+    }
+
+    h1{
+      font-size:2.2rem;
+      margin-bottom:10px;
+      color:#d9a066;
+    }
+
+    .subtitle{
+      color:#c7c7c7;
+      margin-bottom:30px;
+      line-height:1.6;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:18px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;
+      padding:18px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:8px;
+      color:#d9a066;
+      font-weight:600;
+    }
+
+    input{
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:none;
+      outline:none;
+      background:#16161d;
+      color:white;
+      font-family:'Fira Code',monospace;
+      font-size:0.95rem;
+    }
+
+    .actions{
+      margin-top:30px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:15px;
+    }
+
+    button{
+      border:none;
+      outline:none;
+      cursor:pointer;
+      padding:15px 22px;
+      border-radius:14px;
+      font-size:1rem;
+      font-weight:600;
+      transition:0.2s ease;
+      font-family:'Outfit',sans-serif;
+    }
+
+    .primary{
+      background:#d9a066;
+      color:#111;
+    }
+
+    .secondary{
+      background:#22252f;
+      color:white;
+    }
+
+    button:hover{
+      transform:translateY(-2px);
+    }
+
+    textarea{
+      width:100%;
+      min-height:260px;
+      margin-top:25px;
+      border:none;
+      outline:none;
+      border-radius:20px;
+      padding:20px;
+      background:#121218;
+      color:#66ffb3;
+      font-family:'Fira Code',monospace;
+      resize:vertical;
+      line-height:1.5;
+    }
+
+    .footer{
+      margin-top:30px;
+      text-align:center;
+      color:#999;
+      line-height:1.8;
+    }
+
+    .footer a{
+      color:#d9a066;
+      text-decoration:none;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-top:12px;
+      background:rgba(217,160,102,0.12);
+      border:1px solid rgba(217,160,102,0.2);
+      padding:10px 16px;
+      border-radius:999px;
+      color:#ffd6a6;
+    }
+
+    @media(max-width:700px){
+      .container{
+        padding:22px;
+      }
+
+      h1{
+        font-size:1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>☕ KofiType Signed Export Generator</h1>
+
+    <p class="subtitle">
+      Generate valid <code>.kofi</code> export files with custom stats and automatically recreated signatures.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <label>Username</label>
+        <input id="username" value="Javed" maxlength="20">
+      </div>
+
+      <div class="card">
+        <label>XP</label>
+        <input id="xp" type="number" value="999">
+      </div>
+
+      <div class="card">
+        <label>Level</label>
+        <input id="level" type="number" value="50">
+      </div>
+
+      <div class="card">
+        <label>Best WPM</label>
+        <input id="bestWpm" type="number" value="300">
+      </div>
+
+      <div class="card">
+        <label>Tests Completed</label>
+        <input id="tests" type="number" value="500">
+      </div>
+
+      <div class="card">
+        <label>Time Typed (seconds)</label>
+        <input id="timeTyped" type="number" value="99999">
+      </div>
+
+      <div class="card">
+        <label>Accuracy</label>
+        <input id="acc" type="number" value="99">
+      </div>
+
+      <div class="card">
+        <label>Mode</label>
+        <input id="mode" value="time 30">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="generateFile()">⚡ Generate .kofi File</button>
+      <button class="secondary" onclick="downloadGeneratedFile()">⬇️ Download Generated File</button>
+      <button class="secondary" onclick="copyJson()">📋 Copy JSON</button>
+    </div>
+
+    <textarea id="output" placeholder="Generated export data will appear here..."></textarea>
+
+    <div class="footer">
+      <div class="badge">
+        ❤️ Made with love by Javed
+      </div>
+
+      <p style="margin-top:14px;">
+        🌐 <a href="https://iamjaved.site" target="_blank">iamjaved.site</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const SALT = "kofitype_guardian_v3_stable_v1_0";
+
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message + SALT);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    let latestGeneratedBlob = null;
+    let latestGeneratedUsername = 'Guest';
+
+    async function generateFile(){
+      const username = document.getElementById('username').value || 'Guest';
+      const xp = clamp(parseInt(document.getElementById('xp').value),0,999);
+      const level = clamp(parseInt(document.getElementById('level').value),1,9999);
+      const bestWpm = clamp(parseInt(document.getElementById('bestWpm').value),0,300);
+      const testsCompleted = Math.max(0,parseInt(document.getElementById('tests').value)||0);
+      const timeTyped = Math.max(0,parseInt(document.getElementById('timeTyped').value)||0);
+      const acc = clamp(parseInt(document.getElementById('acc').value),0,100);
+      const mode = document.getElementById('mode').value || 'time 30';
+
+      const cleanUser = {
+        username,
+        xp,
+        level,
+        bestWpm,
+        testsCompleted,
+        timeTyped,
+        history:[
+          {
+            date:new Date().toLocaleDateString(),
+            wpm:bestWpm,
+            acc,
+            mode
+          }
+        ],
+        currentSeason:new Date().toISOString().slice(0,7)
+      };
+
+      cleanUser.sig = await sha256(JSON.stringify(cleanUser));
+
+      const finalExport = {
+        app:'kofitype',
+        version:'2.0',
+        timestamp:new Date().toISOString(),
+        user:cleanUser,
+        settings:{
+          darkMode:true,
+          sound:true,
+          focus:false,
+          smoothCaret:true,
+          font:"'Outfit', sans-serif"
+        },
+        config:{
+          mode:'time',
+          time:30,
+          words:25,
+          punctuation:false,
+          numbers:false
+        }
+      };
+
+      const json = JSON.stringify(finalExport,null,2);
+
+      document.getElementById('output').value = json;
+
+      latestGeneratedBlob = new Blob([json], { type:'application/json' });
+      latestGeneratedUsername = username;
+
+      downloadGeneratedFile();
+    }
+
+    function downloadGeneratedFile(){
+      if(!latestGeneratedBlob){
+        alert('Generate a file first 😄');
+        return;
+      }
+
+      const url = URL.createObjectURL(latestGeneratedBlob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${latestGeneratedUsername}_kofitype.kofi`;
+      a.click();
+
+      URL.revokeObjectURL(url);
+    }
+
+    async function copyJson(){
+      const val = document.getElementById('output').value;
+
+      if(!val){
+        alert('Generate file first 😄');
+        return;
+      }
+
+      await navigator.clipboard.writeText(val);
+      alert('Copied successfully 🚀');
+    }
+
+    function clamp(v,min,max){
+      if(isNaN(v)) return min;
+      return Math.max(min,Math.min(max,v));
+    }
+  </script>
+</body>
+</html>
