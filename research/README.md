@@ -45,3 +45,13 @@ node puppeteer_test4.js   # most complete test
 | File | Purpose |
 |------|---------|
 | `http-toolkit-bypass-rule.json` | HTTP Toolkit rule to intercept and rewrite Discord webhook responses. Import in [HTTP Toolkit](https://httptoolkit.com/) |
+
+---
+
+## 🔗 Project Links & Credits
+
+- **GitHub Repository**: [iamjaved026/kofitype-security-research](https://github.com/iamjaved026/kofitype-security-research)
+- **Research Website**: [kofitype-research.javedhussain.com](https://kofitype-research.javedhussain.com)
+- **Security Researcher**: [Javed Hussain (@iamjaved026)](https://iamjaved.site)
+- **Target Application**: [KofiType](https://kofitype.vercel.app) by **Amar**
+

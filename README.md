@@ -1,46 +1,63 @@
+<!-- SEO Keywords: Javed Hussain, Javed Hussain developer, Javed Hussain security researcher, Javed Hussain ethical hacker, iamjaved026, KofiType security audit, KofiType security research by Javed Hussain, client-side security, anti-cheat bypass, AES-GCM, Chrome extension, Puppeteer, fetch interception, Amar KofiType -->
+
 <div align="center">
 
 # ☕ KofiType Security Research
-### *Authorized Vulnerability Research & Security Audit*
+
+### *Authorized Vulnerability Research & Penetration Testing by Javed Hussain (@iamjaved026)*
 
 <br/>
 
-[![Made by Javed](https://img.shields.io/badge/Made_with_❤️_by-Javed-d9a066?style=for-the-badge&logo=heart)](https://iamjaved.site)
-[![MIT License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Researcher](https://img.shields.io/badge/Researcher-Javed_Hussain-d9a066?style=for-the-badge&logo=heart)](https://iamjaved.site)
+[![GitHub](https://img.shields.io/badge/GitHub-@iamjaved026-181717?style=for-the-badge&logo=github)](https://github.com/iamjaved026)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Authorized_Audit-blue?style=for-the-badge&logo=shield)](https://kofitype.vercel.app)
 [![Iterations](https://img.shields.io/badge/Bypass_Versions-7+-orange?style=for-the-badge&logo=git)](forge-tool/versions/)
 
 <br/>
 
-> **I built KofiType. Then I tried to break it. Then I fixed it. Then I tried again.**
-> This repository documents that full loop — every attempt, every bypass, every patch.
+> **Javed Hussain** — Developer, Security Researcher, and Ethical Hacker.  
+> This repository documents my authorized security audit of **KofiType** (created by Amar), including 7+ bypass iterations, custom forge tools, a Chrome extension, and automated Puppeteer tests.
 
 <br/>
 
-**[🌐 Visit KofiType](https://kofitype.vercel.app)** &nbsp;·&nbsp; **[👨‍💻 My Portfolio](https://iamjaved.site)** &nbsp;·&nbsp; **[🐙 GitHub](https://github.com/iamjaved026)**
+**[🌐 Visit KofiType](https://kofitype.vercel.app)** &nbsp;·&nbsp; **[🔬 Research Lab Site](https://kofitype-research.javedhussain.com)** &nbsp;·&nbsp; **[👨‍💻 Javed Hussain Portfolio](https://javedhussain.com)** &nbsp;·&nbsp; **[🐙 GitHub @iamjaved026](https://github.com/iamjaved026)**
 
 </div>
 
 ---
 
-## 📖 What Is This Project?
+## 👨‍💻 About Javed Hussain (@iamjaved026)
 
-**KofiType** is a cozy coffee-themed typing practice app I built and deployed at [kofitype.vercel.app](https://kofitype.vercel.app). It tracks your WPM, accuracy, XP, level, and typing history — all secured with a custom client-side security layer called **Guardian**.
+**Javed Hussain** is a developer, founder, and cybersecurity enthusiast focused on building digital products and researching application security.
 
-This repository is the **security research side** of that project. I wore both hats:
+- 🌐 **Portfolio (New):** [javedhussain.com](https://javedhussain.com/)
+- 🌍 **Portfolio (Previous):** [iamjaved.site](https://iamjaved.site/)
+- 🐙 **GitHub:** [@iamjaved026](https://github.com/iamjaved026)
+- 🔴 **Role:** Red Team Security Researcher
+- 🛡️ **Mission:** Identifying vulnerabilities, testing security controls, and responsibly reporting security findings.
 
-- 🧑‍💻 **Developer** — I wrote the Guardian anti-cheat system, AES-GCM encrypted exports, Discord-based import approval, and bot-detection logic.
-- 🔍 **Security Researcher** — I then tried, repeatedly and systematically, to bypass everything I just built.
+---
 
-Every time I found a bypass, I **patched the live site**. Every time I patched it, I tried to find another way. This document is that story — 7+ iterations, automated tests, a custom Chrome extension, and eventually a real understanding of where client-side security has hard limits.
+## 📖 About This Research
 
-> ⚠️ **This is an authorized self-audit. I own both the target application and this research project.**
+**KofiType** is a cozy coffee-themed typing practice app created by **Amar** and deployed at [kofitype.vercel.app](https://kofitype.vercel.app). It tracks your WPM, accuracy, XP, level, and typing history — all protected by a custom client-side security layer called **Guardian**.
+
+I'm **Javed**, a security researcher. Amar gave me full authorization to audit his application. My job? Break everything. Find every weakness. Document every bypass.
+
+**This repository is the complete record of that audit.**
+
+I systematically attacked KofiType's security across **7+ iterations**, building custom tools, Chrome extensions, and automated test suites. Every time I found a vulnerability, Amar patched it. Every time he patched it, I found another way in.
+
+This document tells that story — from the trivial first bypass to the fundamental limits of client-side security.
+
+> ⚠️ **This is authorized security research. Amar (the developer) explicitly permitted this audit.**
 
 ---
 
 ## 🎯 The Target: KofiType's Security Stack
 
-KofiType implements several layers of client-side protection:
+KofiType implements multiple layers of client-side protection, all designed by Amar:
 
 | Layer | Implementation | Purpose |
 |-------|---------------|---------|
@@ -58,77 +75,107 @@ KofiType implements several layers of client-side protection:
 
 ---
 
-## 🔁 The Research Loop — 7 Iterations
+## 🔁 The Research Timeline — 7 Iterations
 
-This is the actual story of how the research evolved. Every version below is a **real attempt** I made, in order.
-
-### V1 — Plain JSON Editing *(Bypassed in ~10 mins)*
-**Finding:** The original export was plain JSON. I opened it in Notepad, changed the WPM to 999, saved it, and re-imported. It worked instantly.
-
-**What I did:** Wrote `result genrator.html` — a simple form that outputs crafted JSON stats files.
-
-**Patch applied:** Added SHA-256 signature verification to the export format.
+This is the actual story of how the audit evolved. Every version below is a **real attack** I executed, in chronological order.
 
 ---
 
-### V2 — SHA-256 Signature Bypass *(Bypassed in ~1 day)*
-**Finding:** The SHA-256 hash was computed from the JSON fields + a hardcoded HMAC salt. The salt was visible in the source code.
+### V1 — Plain JSON Editing
+**Bypassed in ~10 minutes**
 
-**What I did:** Reverse-engineered the signature algorithm. Updated the generator to compute correct signatures client-side.
+**Finding:** The original export format was plain JSON. No encryption. No signatures. Nothing.
 
-**Patch applied:** Moved to AES-GCM encryption using a token derived at runtime from the app's own source hash.
+**Attack:** I opened an exported `.kofi` file in Notepad, changed the WPM to 999, saved it, and re-imported. It worked instantly.
 
----
+**Tool Built:** `result generator.html` — a simple form that outputs crafted JSON stats files.
 
-### V3 — AES Token Extraction *(Bypassed in ~2 days)*
-**Finding:** The `SECURITY_TOKEN` is `parseInt(sha256(source_code).slice(0,8), 16)`. It changes only when the source code changes. I extracted it with `get_v5_hash.js`.
-
-**What I did:** Extracted the token, replicated the full AES-GCM encryption pipeline in the forge tool.
-
-**Patch applied:** Added heuristic validation — XP/time ratios, history array lengths, WPM caps.
+**Amar's Patch:** Added SHA-256 signature verification to the export format.
 
 ---
 
-### V4 — Heuristic Bypass Engine *(Bypassed in ~3 days)*
-**Finding:** All heuristic rules are deterministic and can be computed in reverse — given target stats, I can calculate the minimum `timeTyped` and correct `history.length` needed to pass.
+### V2 — SHA-256 Signature Bypass
+**Bypassed in ~30 minutes**
 
-**What I did:** Built an auto-correcting heuristic engine into the forge tool. It takes desired stats and auto-adjusts `timeTyped`, `testsCompleted`, and history array to satisfy all rules.
+**Finding:** The SHA-256 hash was computed from the JSON fields plus a hardcoded HMAC salt. The salt was visible directly in the source code.
 
-**Patch applied:** Added Discord approval gate — imports now require a human (me, the admin) to react 👍 on a Discord message before they load.
+**Attack:** I reverse-engineered the signature algorithm, then updated my generator to compute correct signatures client-side.
+
+**Tool Built:** Updated generator with SHA-256 signing capability.
+
+**Amar's Patch:** Moved to AES-GCM encryption using a token derived at runtime from the app's own source hash.
 
 ---
 
-### V5 — Discord Gate Bypass via HTTP Toolkit *(Bypassed in ~1 week)*
+### V3 — AES Token Extraction
+**Bypassed in ~45 minutes**
+
+**Finding:** The `SECURITY_TOKEN` is derived as `parseInt(sha256(source_code).slice(0,8), 16)`. It only changes when the source code changes. I extracted it by fetching and hashing the live source.
+
+**Attack:** Extracted the token, replicated the entire AES-GCM encryption pipeline in my forge tool.
+
+**Tool Built:** `get_v5_hash.js` — extracts the V5 SECURITY_TOKEN from live source.
+
+**Amar's Patch:** Added heuristic validation — XP/time ratios, history array lengths, WPM caps.
+
+---
+
+### V4 — Heuristic Bypass Engine
+**Bypassed in ~30 minutes**
+
+**Finding:** All heuristic rules are deterministic. They can be computed in reverse. Given target stats, I can calculate the exact minimum `timeTyped` and correct `history.length` needed to pass all checks.
+
+**Attack:** Built an auto-correcting heuristic engine into the forge tool. It takes desired stats and automatically adjusts `timeTyped`, `testsCompleted`, and the history array to satisfy every rule.
+
+**Tool Built:** `v4.html` — AES-GCM V4 token + heuristic bypass engine.
+
+**Amar's Patch:** Added Discord approval gate — imports now require a human (Amar, the admin) to react 👍 on a Discord message before they load.
+
+---
+
+### V5 — Discord Gate Bypass via HTTP Toolkit
+**Bypassed in ~3 hours**
+
 **Finding:** The app uses `window.fetch` to POST to `/api/verify` (a Vercel serverless proxy to Discord). If I can intercept that fetch call and fake the response, no Discord interaction is needed.
 
-**What I did:** Used [HTTP Toolkit](https://httptoolkit.com/) to intercept and rewrite the webhook POST response. The `http-toolkit-bypass-rule.json` file contains the interception rules I configured.
+**Attack:** Used [HTTP Toolkit](https://httptoolkit.com/) to intercept and rewrite the webhook POST response. Configured interception rules to return a fake success response.
 
-Also wrote automated tests using Puppeteer (`puppeteer_test.js` through `puppeteer_test4.js`) to verify the bypass worked headlessly.
+**Tools Built:**
+- `http-toolkit-bypass-rule.json` — interception rules
+- `puppeteer_test.js` through `puppeteer_test4.js` — automated headless bypass verification
 
-**Patch applied:** Added HMAC request signing (`X-Kofi-Signature` header), added login/stats/profile Discord hooks that fire independently.
-
----
-
-### V6 — HMAC Bypass + All-webhook Hook Mode *(Bypassed in ~2 days)*
-**Finding:** The HMAC secret (`kofitype_ultra_secure_passcode_99182`) is embedded in the source code and computable client-side. More importantly, all the webhook calls go through `window.fetch` — if you patch `fetch` at `document_start`, you can intercept everything before the app even runs.
-
-**What I did:** Built the **Chrome Extension** — patches `window.fetch` in the page context before the app's IIFE even executes. All Discord calls are intercepted and faked responses are served. Approval reactions are auto-placed after 2.5 seconds.
-
-**Patch applied:** Added SHA-256 bootloader that hashes `__KOFITYPE_CORE__`'s own source. If the code is modified, the app shows a "SECURITY BREACH" screen.
+**Amar's Patch:** Added HMAC request signing (`X-Kofi-Signature` header), added login/stats/profile Discord hooks that fire independently.
 
 ---
 
-### V7 — Bootloader Bypass + Full Extension *(Current State)*
-**Finding:** The bootloader hashes the code to derive the token, but since my extension patches `window.fetch` *before* the app runs, the bootloader runs fine (we're not modifying the code, just intercepting network calls). The `PLACEHOLDER_HASH` in the live version means the integrity check is disabled by default.
+### V6 — HMAC Bypass + Full Hook Mode
+**Bypassed in ~4 hours**
 
-**What I did:** Completed the Chrome extension with:
+**Finding:** The HMAC secret (`kofitype_ultra_secure_passcode_99182`) is embedded in the source code and computable client-side. More critically, all webhook calls go through `window.fetch` — if you patch `fetch` at `document_start`, you can intercept everything before the app even runs.
+
+**Attack:** Built the **Chrome Extension** — patches `window.fetch` in the page context before the app's IIFE executes. All Discord calls are intercepted and fake responses served. Approval reactions are auto-placed after 2.5 seconds.
+
+**Tool Built:** Complete Chrome MV3 extension with fetch interception and forge capabilities.
+
+**Amar's Patch:** Added SHA-256 bootloader that hashes `__KOFITYPE_CORE__`'s own source. If the code is modified, the app shows a "SECURITY BREACH" screen.
+
+---
+
+### V7 — Bootloader Bypass + Complete Extension
+**Current State**
+
+**Finding:** The bootloader hashes the code to derive the token, but since my extension patches `window.fetch` *before* the app runs, the bootloader executes fine. We're not modifying the code — just intercepting network calls. Additionally, the `PLACEHOLDER_HASH` in the live version means the integrity check is disabled by default.
+
+**Attack:** Completed the Chrome extension with:
 - Standalone AES-GCM forge (runs in popup, no page needed)
 - Full fetch intercept with auto-reaction faking
 - Console restoration (bypasses the blackhole)
 - Debugger trap neutralization
 - Auto token extraction from the live page
 
-**Current Status:** The circular dependency (client-side security must trust the client) means there is a fundamental limit to what can be secured purely in the browser. The research concludes here with recommendations for server-side validation.
+**Tool Built:** Full-featured Chrome extension with premium dark UI.
+
+**Current Status:** The circular dependency (client-side security must trust the client) means there is a fundamental limit to what can be secured purely in the browser. This research concludes with recommendations for server-side validation.
 
 ---
 
@@ -206,9 +253,9 @@ kofitype-security-research/
 
 ---
 
-## 🚀 How to Try This Yourself
+## 🚀 How to Reproduce This Research
 
-> **Before you start:** These tools are built for [kofitype.vercel.app](https://kofitype.vercel.app). Go visit it first — it's actually a great typing app! 
+> **Before you start:** These tools are built for [kofitype.vercel.app](https://kofitype.vercel.app). Go visit it first — it's actually a great typing app!
 
 ### Option A — Use the Forge Tool (Standalone, No Install)
 
@@ -243,11 +290,13 @@ node puppeteer_test4.js
 ### Extracting the Current Security Token
 
 The app's `SECURITY_TOKEN` is derived as:
+
 ```js
 const token = parseInt( sha256( minified_source_of___KOFITYPE_CORE__ ).slice(0,8), 16 );
 ```
 
 To extract it, open DevTools on kofitype.vercel.app and paste:
+
 ```js
 (async () => {
   const raw = __KOFITYPE_CORE__.toString().replace(/\s+/g,'');
@@ -256,6 +305,7 @@ To extract it, open DevTools on kofitype.vercel.app and paste:
   console.log('Token:', parseInt(hex.slice(0,8), 16));
 })();
 ```
+
 *(The Chrome extension's Forge tab does this automatically)*
 
 ---
@@ -263,22 +313,25 @@ To extract it, open DevTools on kofitype.vercel.app and paste:
 ## 🔐 Security Findings & Lessons
 
 ### What Actually Works (Client-Side)
-- ✅ AES-GCM encryption with runtime-derived keys — stops casual file editing
-- ✅ Zero-width steganography — protects against Notepad/hex editor tampering
-- ✅ Heuristic validation — catches statistically impossible stats
-- ✅ Discord approval gate — adds human friction to import abuse
+
+- ✅ **AES-GCM encryption with runtime-derived keys** — stops casual file editing
+- ✅ **Zero-width steganography** — protects against Notepad/hex editor tampering
+- ✅ **Heuristic validation** — catches statistically impossible stats
+- ✅ **Discord approval gate** — adds human friction to import abuse
 
 ### Fundamental Limitations (Client-Side)
+
 - ❌ Any secret embedded in client-side code **can be extracted** — the AES key, HMAC secret, and token derivation logic are all readable
 - ❌ `window.fetch` can be patched before app code runs — cannot be reliably protected
 - ❌ `debugger` traps and console blackholes can be bypassed by extension injection at `document_start`
 - ❌ The SHA-256 bootloader is effectively a hash of publicly visible code — knowing the hash doesn't help when the attacker can replicate the entire environment
 
-### Recommendations (Reported to Myself 😅)
+### Recommendations (Delivered to Amar)
+
 1. **Move validation server-side** — Vercel Functions can validate stat relationships before accepting any import
 2. **Rate-limit imports** at the server level, not the client
 3. **Bind exports to a user identity** — exports signed with a server-issued key that ties to an account
-4. **The Discord gate is the strongest layer** — it adds real human review, but it's bypassable via fetch patching at the extension level. A server-side webhook with secret validation would be stronger.
+4. **Strengthen the Discord gate** — implement server-side webhook with secret validation instead of client-side fetch
 
 ---
 
@@ -289,17 +342,21 @@ To extract it, open DevTools on kofitype.vercel.app and paste:
 <td align="center" width="50%">
 
 **Javed**<br/>
-*Developer & Security Researcher*<br/><br/>
-Built KofiType, conducted this entire research, built all bypass tools, reported all findings, patched the live site 7+ times.<br/><br/>
+*Security Researcher*<br/><br/>
+
+Conducted the entire security audit. Built all bypass tools, Chrome extensions, automated test suites, and forge utilities. Documented every finding and reported all vulnerabilities to the developer.<br/><br/>
+
 🌐 [iamjaved.site](https://iamjaved.site)<br/>
 🐙 [@iamjaved026](https://github.com/iamjaved026)
 
 </td>
 <td align="center" width="50%">
 
-**KofiType** *(also by Javed)*<br/>
-*The Target Application*<br/><br/>
-A cozy coffee-themed typing practice app with WPM tracking, XP/leveling, and a custom Guardian anti-cheat system. Visit the real app at:<br/><br/>
+**Amar**<br/>
+*Developer of KofiType*<br/><br/>
+
+Built KofiType — a cozy coffee-themed typing practice app with WPM tracking, XP/leveling, and the custom Guardian anti-cheat system. Patched the application 7+ times in response to this research.<br/><br/>
+
 🌐 [kofitype.vercel.app](https://kofitype.vercel.app)<br/>
 ⌨️ *Start typing — it's actually really good!*
 
@@ -311,10 +368,10 @@ A cozy coffee-themed typing practice app with WPM tracking, XP/leveling, and a c
 
 ## 📜 Disclaimer
 
-This project represents **authorized security research** conducted by the developer against their own application.
+This project represents **authorized security research** conducted by Javed against KofiType, with explicit permission from the developer (Amar).
 
-- ✅ I own both the research tools and the target application
-- ✅ All findings were used to improve the live application's security
+- ✅ The developer explicitly authorized this security audit
+- ✅ All findings were reported to the developer and used to improve the application
 - ✅ No user data was accessed, modified, or exfiltrated
 - ✅ This is released as open source for educational purposes
 
@@ -333,6 +390,9 @@ MIT License — see [LICENSE](LICENSE) for full text.
 
 *"The best way to understand how to defend something is to try to break it."*
 
-Made with ☕ and curiosity by **[Javed](https://iamjaved.site)**
+**Research conducted by [Javed](https://iamjaved.site)**  
+**Target application by Amar — [KofiType](https://kofitype.vercel.app)**
+
+Made with ☕ and curiosity
 
 </div>

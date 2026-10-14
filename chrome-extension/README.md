@@ -44,3 +44,14 @@ background.js returns fake message with { reactions: [{ emoji: { name: "👍" } 
      ↓
 App sees 👍 reaction → finishImport() → stats loaded ✅
 ```
+
+---
+
+## 🔗 Project Links & Credits
+
+- **GitHub Repository**: [iamjaved026/kofitype-security-research](https://github.com/iamjaved026/kofitype-security-research)
+- **Research Website**: [kofitype-research.javedhussain.com](https://kofitype-research.javedhussain.com)
+- **Security Researcher**: [Javed Hussain (@iamjaved026)](https://iamjaved.site)
+- **Target Application**: [KofiType](https://kofitype.vercel.app) by **Amar**
+- **Authorization**: Conducted with explicit developer permission for vulnerability testing and defense hardening.
+

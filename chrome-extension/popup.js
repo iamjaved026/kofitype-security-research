@@ -17,9 +17,22 @@ document.addEventListener("DOMContentLoaded", () => {
   wireHookToggle();
   wireRefreshStats();
   wireClearLog();
+  wireExternalLinks();
 
   init();
 });
+
+function wireExternalLinks() {
+  document.querySelectorAll("a[href]").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const url = a.getAttribute("href");
+      if (url && url.startsWith("http")) {
+        e.preventDefault();
+        chrome.tabs.create({ url });
+      }
+    });
+  });
+}
 
 async function init() {
   await checkSiteStatus();

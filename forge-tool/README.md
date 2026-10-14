@@ -30,3 +30,13 @@ The token is derived as:
 const token = parseInt( sha256( __KOFITYPE_CORE__.toString().replace(/\s+/g,'') ).slice(0, 8), 16 );
 ```
 Every time the site's source code changes, the token changes. Use the Chrome extension to auto-detect the current value.
+
+---
+
+## 🔗 Project Links & Credits
+
+- **GitHub Repository**: [iamjaved026/kofitype-security-research](https://github.com/iamjaved026/kofitype-security-research)
+- **Research Website**: [kofitype-research.javedhussain.com](https://kofitype-research.javedhussain.com)
+- **Security Researcher**: [Javed Hussain (@iamjaved026)](https://iamjaved.site)
+- **Target Application**: [KofiType](https://kofitype.vercel.app) by **Amar**
+
